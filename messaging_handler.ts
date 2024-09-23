@@ -44,32 +44,44 @@ export class MessagingHandler {
         const attachmentPath = './product.jpg';
         const reader = new DataReader();
         const messages = await reader.getMessageData();
+        const usedNumbers = [];
         for (const message of messages) {
             // const phoneNumber = '18098052529';
-            // const phoneNumber = '18296835513';
-            const phoneNumber = message.phoneNumber.toString();
+            const phoneNumber = '18296835513';
+            // const phoneNumber = message.phoneNumber.toString();
+            // if (usedNumbers.includes(phoneNumber)) {
+            // continue;
+            // }
             const messages = this.buildMessage(message);
             const chatId = MessagingHandler.getChatId(phoneNumber);
             for (const message of messages) {
                 await this.sendMessage(phoneNumber, message);
             }
-            await this.sendAttachment(phoneNumber, attachmentPath);
+            if (messages.length > 0) {
+                await this.sendAttachment(phoneNumber, attachmentPath);
+            }
             console.log("Message sent to:", chatId);
+            usedNumbers.push(phoneNumber);
             await new Promise(resolve => setTimeout(resolve, 200));
         }
-        process.exit(0);
+        await new Promise(resolve => setTimeout(resolve, 10000));
     }
 
     buildMessage(item: AutomatedMessageData): string[] {
-        const name = item.name.replace(/\-/g, '').trim();
-        const totalPrice = `RD$${item.totalPrice.toLocaleString('es-DO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-        const amountOfUnits = item.quantity > 1 ? `${item.quantity} unidades` : `${item.quantity} unidad`;
+        try {
+            const name = item.name.replace(/\-/g, '').trim();
+            const totalPrice = `RD$${item.totalPrice.toLocaleString('es-DO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            const amountOfUnits = item.quantity > 1 ? `${item.quantity} unidades` : `${item.quantity} unidad`;
 
-        return [
-            '✨ ¡Hola ' + name + '! ✨',
-            `Queremos reconfirmar tu pedido de *${amountOfUnits}* de *${item.product}* \n por un total de *${totalPrice}*. 💸`,
-            `Nos encantaría enviarte tu orden lo antes posible 🚚 \n solo necesitamos tu confirmación para proceder. ✅ \n\n Por favor, responde a este mensaje para confirmar tu compra \n 🙌 ¡Gracias por tu preferencia!`,
-            'Feliz Sabado ✨',
-        ]
+            return [
+                '✨ ¡Buenos días' + name + '! ✨',
+                `Queremos recordarte que estamos a la espera de su confirmación de su orden de *${amountOfUnits}* de *${item.product}* \n por un total de *${totalPrice}*. 💸`,
+                `Estaremos despachando su pedido a ${item.address} en ${item.city} a partir del Miercoles. 📦`,
+                'Feliz Lunes',
+            ]
+        } catch (error) {
+            console.log(error);
+            return [];
+        }
     }
 }

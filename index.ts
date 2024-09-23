@@ -27,16 +27,7 @@ client.on('ready', async () => {
 });
 
 client.on('message', (msg: Message) => {
-    console.log("id: ", msg.id);
-    console.log("from: ", msg.from);
-    console.log("to: ", msg.to);
-    console.log("body: ", msg.body);
 
-    try {
-        client.sendMessage(msg.from, 'Hello from Bun!');
-    } catch (error) {
-        console.error(error);
-    }
 });
 
 client.initialize();

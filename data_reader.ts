@@ -37,7 +37,7 @@ export class DataReader {
             city: item["CIUDAD"],
             name: item["NOMBRE Y APELLIDO"],
             phoneNumber: item["TELEFONO"],
-            product: item["P"],
+            product: item["PRODUCTO"],
             quantity: item["CANTIDAD"],
             totalPrice: item["PRECIO TOTAL"],
         }
